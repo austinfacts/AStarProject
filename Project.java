@@ -74,7 +74,7 @@ public class Project {
                 if(tempConnections1.size() < 2)
                 	break;
                 count = Integer.parseInt(tempConnections1.get(1)) + 2;
-                tempConnections2 = tempConnections1.subList(2, count);
+                tempConnections2 = new ArrayList<String>(tempConnections1.subList(2, count));
                 allCities.get(tempConnections1.get(0)).setConnections(tempConnections2);
             }
             
