@@ -11,16 +11,14 @@ public class City {
 
 
 
-    public City(int x, int y, int destx, int desty, String name, List<String> connections) {
+    public City(String name, int x, int y) {
+        this.name = name;
         this.x = x;
         this.y = y;
-        this.destx = destx;
-        this.desty = desty;
-        this.name = name;
-        this.StraightDistance = Math.sqrt(Math.pow(x - destx, 2) + Math.pow(y - desty, 2));
-        this.connections = connections;
-
+        this.StraightDistance = Double.NaN;
     }
+
+    public void setConnections(List<String> connections) { this.connections = connections;}
 
     public List<String> getConnections() {
         return connections;
@@ -31,7 +29,11 @@ public class City {
     }
 
     public double getStraightDistance() {
-        return StraightDistance;
+        if(StraightDistance == Double.NaN) {
+            StraightDistance = Math.sqrt(Math.pow(this.x - this.destx, 2) + Math.pow(this.y - this.desty, 2));
+            return StraightDistance;
+        } else
+            return StraightDistance;
     }
 
     public void setDestx(int destx) {
