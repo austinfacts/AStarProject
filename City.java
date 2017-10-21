@@ -15,7 +15,6 @@ public class City {
         this.name = name;
         this.x = x;
         this.y = y;
-        this.StraightDistance = Double.NaN;
     }
 
     public void setConnections(List<String> connections) { this.connections = connections;}
@@ -29,7 +28,7 @@ public class City {
     }
 
     public double getStraightDistance() {
-        if(StraightDistance == Double.NaN) {
+        if(StraightDistance == 0) {
             StraightDistance = Math.sqrt(Math.pow(this.x - this.destx, 2) + Math.pow(this.y - this.desty, 2));
             return StraightDistance;
         } else

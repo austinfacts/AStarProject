@@ -12,7 +12,8 @@ public class Project {
         List<String> tempConnections1 = new ArrayList<String>();
         List<String> tempConnections2 = new ArrayList<String>();
         List<String> locationInfo = new ArrayList<String>();
-        List<String> destinationCity = new ArrayList<String>();
+        
+        int destx, desty;
 
         boolean isStraight;
 
@@ -47,8 +48,6 @@ public class Project {
                 locationInfo = Arrays.asList(inputRead.split(" "));
                 if(locationInfo.size() < 3)
                 	break;
-                if (locationInfo.get(0) == endString)
-                    destinationCity = locationInfo;
                 allCities.put(locationInfo.get(0), new City(locationInfo.get(0), Integer.parseInt(locationInfo.get(1)), Integer.parseInt(locationInfo.get(2))));
             }
             
@@ -85,11 +84,15 @@ public class Project {
         } catch (IOException msg) {
         	System.out.println("Error reading file: " + connectionPath);
         }
+        
+        // Retrieves the x and y coordinates for the destination city
+        destx = allCities.get(endString).getX();
+        desty = allCities.get(endString).getY();
 
         // Adds destination x and y to each City object
         for ( City value : allCities.values()) {
-            value.setDestx(Integer.parseInt(destinationCity.get(1)));
-            value.setDesty(Integer.parseInt(destinationCity.get(2)));
+            value.setDestx(destx);
+            value.setDesty(desty);
         }
 
 
