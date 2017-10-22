@@ -5,7 +5,7 @@ import java.util.List;
  */
 public class City {
     private int x, y, destx, desty;
-    private double StraightDistance; // The destinations are important for the heuristics
+    private double straightDistance; // The destinations are important for the heuristics
     private String name;
     private List<String> connections;
 
@@ -15,6 +15,7 @@ public class City {
         this.name = name;
         this.x = x;
         this.y = y;
+        this.straightDistance = 0;
     }
 
     public void setConnections(List<String> connections) { this.connections = connections;}
@@ -28,11 +29,11 @@ public class City {
     }
 
     public double getStraightDistance() {
-        if(StraightDistance == 0) {
-            StraightDistance = Math.sqrt(Math.pow(this.x - this.destx, 2) + Math.pow(this.y - this.desty, 2));
-            return StraightDistance;
+        if(straightDistance == 0) {
+            straightDistance = Math.sqrt(Math.pow(this.x - this.destx, 2) + Math.pow(this.y - this.desty, 2));
+            return straightDistance;
         } else
-            return StraightDistance;
+            return straightDistance;
     }
 
     public void setDestx(int destx) {
