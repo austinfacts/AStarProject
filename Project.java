@@ -8,7 +8,7 @@ public class Project {
 
     public static void main(String[] args) {
         Scanner reader = new Scanner(System.in);
-        String locationPath, connectionPath, startString, endString, inputRead, optimalPath;
+        String locationPath, connectionPath, startString, endString, inputRead, optimalPath, exclusionStr;
         List<String> tempConnections1;
         List<String> tempConnections2;
         List<String> locationInfo;
@@ -33,7 +33,8 @@ public class Project {
         startString = reader.next();
         System.out.print("Please enter the destination city: ");
         endString = reader.next();
-
+        System.out.print("Please enter the cities to exclude (separated by \",\" [a,b,c]); ");
+        exclusionStr = reader.next();
         System.out.print("Would you like to use straight line distance or number of connections(s/c)? ");
         isStraight = reader.next().equalsIgnoreCase("s");
         System.out.print("Would you like to see a step by step breakdown of each move (y/n)?");
@@ -42,7 +43,10 @@ public class Project {
 
         Map<String, City> allCities = new HashMap<>(); // This will contain all the cities before we calculate the heuristics and put them in the priority queue
 
-//        Do the file IO with the locations file to retrieve all the cities and put them in
+        String[] excludedCities = exclusionStr.split(",");
+        Set<String> excludedSet = new HashSet<String>(Arrays.asList(excludedCities));
+
+        //        Do the file IO with the locations file to retrieve all the cities and put them in
 
         startTime = System.currentTimeMillis();
         // Reads the locations file and populates allCities hashmap
@@ -54,8 +58,11 @@ public class Project {
             while ((inputRead = bufferedReader.readLine()) != null) {
                 locationInfo = Arrays.asList(inputRead.split(" "));
                 if(locationInfo.size() < 3)
-                    break;
-                allCities.put(locationInfo.get(0), new City(locationInfo.get(0), Integer.parseInt(locationInfo.get(1)), Integer.parseInt(locationInfo.get(2))));
+                    continue;
+                else if(excludedSet.contains(locationInfo.get(0)))
+                	continue;
+                else
+                	allCities.put(locationInfo.get(0), new City(locationInfo.get(0), Integer.parseInt(locationInfo.get(1)), Integer.parseInt(locationInfo.get(2))));
             }
 
             bufferedReader.close();
@@ -78,10 +85,15 @@ public class Project {
             while((inputRead = bufferedReader.readLine()) != null) {
                 tempConnections1 = Arrays.asList(inputRead.split(" "));
                 if(tempConnections1.size() < 2)
-                    break;
-                count = Integer.parseInt(tempConnections1.get(1)) + 2;
-                tempConnections2 = new ArrayList<>(tempConnections1.subList(2, count));
-                allCities.get(tempConnections1.get(0)).setConnections(tempConnections2);
+                    continue;
+                else if(excludedSet.contains(tempConnections1.get(0)))
+            		continue;
+                else {
+	                count = Integer.parseInt(tempConnections1.get(1)) + 2;
+	                tempConnections2 = new ArrayList<>(tempConnections1.subList(2, count));
+	                tempConnections2.removeAll(excludedSet);
+	                allCities.get(tempConnections1.get(0)).setConnections(tempConnections2);
+                }
             }
 
             bufferedReader.close();
