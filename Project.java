@@ -23,6 +23,7 @@ public class Project {
 
         boolean isStraight, isStepByStep;
 
+//        Paths hardcoded for development purposes, to accept input at later date
         System.out.println("Welcome to the A* city program.");
         System.out.print("Please enter the path of the locations file: ");
         locationPath = reader.next();
@@ -114,7 +115,7 @@ public class Project {
             cities = new PriorityQueue<>((o1, o2) -> (int) (o1.getStraightDistance() - o2.getStraightDistance()));
             cities.add(allCities.get(startString));
             while(!cities.peek().getName().equalsIgnoreCase(endString)) {
-                City currentClosest = cities.peek();
+                City currentClosest = cities.poll();
                 for (String connection : currentClosest.getConnections()) {
                     if (!isVisited.getOrDefault(connection, false)) {
                         cities.add(allCities.get(connection));
@@ -127,7 +128,7 @@ public class Project {
                     System.out.println("Best move is: " + cities.peek().getName());
                     System.out.println("");
                 }
-                isVisited.put(cities.peek().getName(), true);
+                isVisited.put(currentClosest.getName(), true);
             }
 //            Prints the final output of the program
             System.out.println("Optimal Path:");
