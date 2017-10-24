@@ -5,3 +5,5 @@ javac Project.java
 
 To run, type the following into the command line:
 java Project
+
+When prompted, enter the input in the format requested
