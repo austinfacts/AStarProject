@@ -2,23 +2,24 @@ import java.util.*;
 import java.io.*;
 
 /**
- * Created by lacke on 5/10/2017.
+ * The main class that runs the A* algorithm
  */
 public class Project {
 
     public static void main(String[] args) {
         Scanner reader = new Scanner(System.in);
         String locationPath, connectionPath, startString, endString, inputRead, optimalPath;
-        List<String> tempConnections1 = new ArrayList<String>();
-        List<String> tempConnections2 = new ArrayList<String>();
-        List<String> locationInfo = new ArrayList<String>();
+        List<String> tempConnections1;
+        List<String> tempConnections2;
+        List<String> locationInfo;
         Map<String, Boolean> isVisited = new HashMap<>();
         PriorityQueue<City> cities;
         Queue<String> cityQueue;
 //        This map is a bit hard to explain, but it is used in backtracking the path taken
         Map<String, String> origins = new HashMap<>();
+        long setupTime, algorithmTime, startTime;
 
-        int destx, desty; //distanceTraveled = 0;
+        int destx, desty;
 
         boolean isStraight, isStepByStep;
 
@@ -29,9 +30,9 @@ public class Project {
         System.out.print("Please enter the path of the connections file: ");
         connectionPath = reader.next();
         System.out.print("Please enter the starting city: ");
-        startString = "D4"; // reader.next();
+        startString = reader.next();
         System.out.print("Please enter the destination city: ");
-        endString = "G5"; // reader.next();
+        endString = reader.next();
 
         System.out.print("Would you like to use straight line distance or number of connections(s/c)? ");
         isStraight = reader.next().equalsIgnoreCase("s");
@@ -43,7 +44,7 @@ public class Project {
 
 //        Do the file IO with the locations file to retrieve all the cities and put them in
 
-
+        startTime = System.currentTimeMillis();
         // Reads the locations file and populates allCities hashmap
         try {
 
@@ -79,7 +80,7 @@ public class Project {
                 if(tempConnections1.size() < 2)
                     break;
                 count = Integer.parseInt(tempConnections1.get(1)) + 2;
-                tempConnections2 = new ArrayList<String>(tempConnections1.subList(2, count));
+                tempConnections2 = new ArrayList<>(tempConnections1.subList(2, count));
                 allCities.get(tempConnections1.get(0)).setConnections(tempConnections2);
             }
 
@@ -100,11 +101,14 @@ public class Project {
             value.setDestx(destx);
             value.setDesty(desty);
         }
-
+        setupTime = System.currentTimeMillis() - startTime;
 
 
         allCities.get(startString);
         isVisited.put(startString, true);
+
+
+//        We could call this the start of the algorithm
 
         if (isStraight) {
 //            Initializes a priority queue with its own comparator
@@ -126,6 +130,7 @@ public class Project {
                 }
                 isVisited.put(cities.peek().getName(), true);
             }
+//            Prints the final output of the program
             System.out.println("Optimal Path:");
             City backTracking = cities.peek();
             optimalPath = getPath(backTracking.getName(), startString, origins);
@@ -134,39 +139,46 @@ public class Project {
 
 
         } else {
-        	cityQueue = new LinkedList<String>();
-        	cityQueue.add(startString);
-        	while(!cityQueue.peek().equalsIgnoreCase(endString) && !cityQueue.isEmpty()) {
-        		String currentCity = cityQueue.peek();
-        		for(String connection : allCities.get(currentCity).getConnections()) {
-        			if(!isVisited.getOrDefault(connection, false)) {
-        				if(!cityQueue.contains(connection))
-        					cityQueue.add(connection);
-        				if(!origins.containsKey(connection))
-        					origins.put(connection, currentCity);
-        			}
-        		}
-        		cityQueue.remove();
-        		if (isStepByStep) {
-        			System.out.println("Current Path: " + getPath(currentCity, startString, origins));
-        			System.out.println("Number of connections: " + getConnectionSize(currentCity, startString, origins));
-        			System.out.println("Best move is: " + cityQueue.peek());
-        			System.out.println("");
-        		}
-        		isVisited.put(currentCity, true);
-        	}
-        	System.out.println("Optimal Path:");
-        	String backtracking = cityQueue.peek();
-        	optimalPath = getPath(backtracking, startString, origins);
-        	System.out.println(optimalPath);
-        	System.out.println("Number of connections: " +getConnectionSize(cityQueue.peek(), startString, origins));
+            cityQueue = new LinkedList<>();
+            cityQueue.add(startString);
+            while(!cityQueue.peek().equalsIgnoreCase(endString) && !cityQueue.isEmpty()) {
+                String currentCity = cityQueue.peek();
+                for (String connection : allCities.get(currentCity).getConnections()) {
+                    if (!isVisited.getOrDefault(connection, false)) {
+                        if (!cityQueue.contains(connection))
+                            cityQueue.add(connection);
+                        if (!origins.containsKey(connection))
+                            origins.put(connection, currentCity);
+                    }
+                }
+                cityQueue.remove();
+                if (isStepByStep) {
+                    System.out.println("Current Path: " + getPath(currentCity, startString, origins));
+                    System.out.println("Number of connections: " + getConnectionSize(currentCity, startString, origins));
+                    System.out.println("Best move is: " + cityQueue.peek());
+                    System.out.println("");
+                }
+                isVisited.put(currentCity, true);
+            }
+//            Prints the final output of the program
+            System.out.println("Optimal Path:");
+            String backtracking = cityQueue.peek();
+            optimalPath = getPath(backtracking, startString, origins);
+            System.out.println(optimalPath);
+            System.out.println("Number of connections: " +getConnectionSize(cityQueue.peek(), startString, origins));
         }
+//        The printing of the performance metrics
+        algorithmTime = System.currentTimeMillis() - startTime - setupTime;
+        System.out.println();
+        System.out.println("The setup took: " + setupTime + " milliseconds");
+        System.out.println("The algorithm took: " + algorithmTime + " milliseconds");
+        System.out.println("Total time: " + (setupTime + algorithmTime) + " milliseconds");
 
     }
 
     /**
      *
-     * @param currentString The name of the current node
+     * @param currentString the name of the current node
      * @param startString the starting point
      * @param origins the map that contains the pairs
      * @return a string of the optimal path to arrive at a node
@@ -179,16 +191,31 @@ public class Project {
         }
         return optimalPath;
     }
-    
+
+    /**
+     *
+     * @param currentString he name of the current node
+     * @param startString the starting point
+     * @param origins the map that contains the pairs
+     * @return The number of connections between the current city and the starting city
+     */
     private static Integer getConnectionSize(String currentString, String startString, Map<String, String> origins) {
-    	int count = 0;
-    	while(!currentString.equalsIgnoreCase(startString)) {
-    		currentString = origins.get(currentString);
-    		count++;
-    	}
-    	return count;
+        int count = 0;
+        while(!currentString.equalsIgnoreCase(startString)) {
+            currentString = origins.get(currentString);
+            count++;
+        }
+        return count;
     }
 
+    /**
+     *
+     * @param currentString the name of the current node
+     * @param startString the starting point
+     * @param origins the map that contains the pairs
+     * @param allCities The map with alle the cities
+     * @return the distance traveled from the start to the current city
+     */
     private static double getDistanceTraveled(String currentString, String startString, Map<String, String> origins, Map<String, City> allCities) {
         double distanceTraveled = 0;
         City currentCity, previousCity;
