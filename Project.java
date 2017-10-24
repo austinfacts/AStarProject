@@ -23,7 +23,6 @@ public class Project {
 
         boolean isStraight, isStepByStep;
 
-//        Paths hardcoded for development purposes, to accept input at later date
         System.out.println("Welcome to the A* city program.");
         System.out.print("Please enter the path of the locations file: ");
         locationPath = reader.next();
