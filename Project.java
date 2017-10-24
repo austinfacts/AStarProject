@@ -34,7 +34,7 @@ public class Project {
         startString = reader.next();
         System.out.print("Please enter the destination city: ");
         endString = reader.next();
-        System.out.print("Please enter the cities to exclude (separated by \",\" [a,b,c]); ");
+        System.out.print("Please enter the cities to exclude (separated by \",\" [a,b,c]), or \"n\"");
         exclusionStr = reader.next();
         System.out.print("Would you like to use straight line distance or number of connections(s/c)? ");
         isStraight = reader.next().equalsIgnoreCase("s");
