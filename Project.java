@@ -2,7 +2,9 @@ import java.util.*;
 import java.io.*;
 
 /**
- * The main class that runs the A* algorithm
+ * The main class that runs the A* algorithm, either by a straight line distance or by the minimum number of links
+ * Austin Lackey
+ * Gabriel Contreras
  */
 public class Project {
 
@@ -23,7 +25,6 @@ public class Project {
 
         boolean isStraight, isStepByStep;
 
-//        Paths hardcoded for development purposes, to accept input at later date
         System.out.println("Welcome to the A* city program.");
         System.out.print("Please enter the path of the locations file: ");
         locationPath = reader.next();
@@ -138,7 +139,11 @@ public class Project {
                     System.out.println("Current Path: " + getPath(currentClosest.getName(), startString, origins));
                     System.out.println("Distance Traveled: " + getDistanceTraveled(currentClosest.getName(), startString, origins, allCities));
                     System.out.println("Best move is: " + cities.peek().getName());
-                    System.out.println("");
+                    try {
+                        System.in.read();
+                    } catch (Exception e) {
+
+                    }
                 }
                 isVisited.put(currentClosest.getName(), true);
             }
@@ -168,7 +173,11 @@ public class Project {
                     System.out.println("Current Path: " + getPath(currentCity, startString, origins));
                     System.out.println("Number of connections: " + getConnectionSize(currentCity, startString, origins));
                     System.out.println("Best move is: " + cityQueue.peek());
-                    System.out.println("");
+                    try {
+                        System.in.read();
+                    } catch (Exception e) {
+
+                    }
                 }
                 isVisited.put(currentCity, true);
             }
@@ -179,13 +188,13 @@ public class Project {
             System.out.println(optimalPath);
             System.out.println("Number of connections: " +getConnectionSize(cityQueue.peek(), startString, origins));
         }
+
 //        The printing of the performance metrics
         algorithmTime = System.currentTimeMillis() - startTime - setupTime;
         System.out.println();
         System.out.println("The setup took: " + setupTime + " milliseconds");
         System.out.println("The algorithm took: " + algorithmTime + " milliseconds");
         System.out.println("Total time: " + (setupTime + algorithmTime) + " milliseconds");
-
     }
 
     /**
