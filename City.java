@@ -1,7 +1,9 @@
 import java.util.List;
 
 /**
- * Created by lacke on 10/19/2017.
+ * The class for the city object that holds the necessary data
+ * Austin Lackey
+ * Babriel Contreras
  */
 public class City {
     private int x, y, destx, desty;
